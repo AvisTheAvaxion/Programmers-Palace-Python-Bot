@@ -1,3 +1,18 @@
+import discord
+from discord.ext import commands
+
+intents = discord.Intents.default()
+intents.members = True
+
+ppLogo = "https://cdn.discordapp.com/avatars/823751670210363393/472d53a711b5fe4393b6bc5dc9f6e47a.webp?size=2048"
+
+client = commands.Bot(command_prefix="!")
+
+@client.event
+async def on_ready():
+    activity = discord.Game(name="with code")
+    await client.change_presence(status=discord.Status.online, activity=activity)
+    print("Programers Princess bot is ready!")
 
 @client.event
 async def on_member_join(member):
@@ -104,7 +119,7 @@ async def on_message(message):
       # print("Mention: " + x.group(1))
       reason = ("Reason: " + x.group(2))
       
-      if message.author.
+      #if message.author.
       try:
         await target.kick(reason= reason)
 
@@ -118,7 +133,5 @@ async def on_message(message):
         await channel.send(embed= embed)
     else:
       pass
-  
-
 
 client.run("Token")
