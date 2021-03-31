@@ -8,7 +8,7 @@ class PPBot(commands.Bot):
     def __init__(self, *args):
         super().__init__(command_prefix=args[0], description=args[1], intents=intents)
 
-bot = PPBot(">", "Bot for Programmers Palace", intents=intents)
+bot = PPBot(">", "Bot for Programmers Palace")
 
 ppLogo = "https://cdn.discordapp.com/avatars/823751670210363393/472d53a711b5fe4393b6bc5dc9f6e47a.webp?size=2048"
 
