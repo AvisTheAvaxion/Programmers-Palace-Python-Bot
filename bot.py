@@ -1,18 +1,3 @@
-import discord
-from discord.ext import commands
-
-intents = discord.Intents.default()
-intents.members = True
-
-client = commands.Bot(command_prefix=">", intents=intents)
-
-ppLogo = "https://cdn.discordapp.com/avatars/823751670210363393/472d53a711b5fe4393b6bc5dc9f6e47a.webp?size=2048"
-
-@client.event
-async def on_ready():
-    activity = discord.Game(name="with code")
-    await client.change_presence(status=discord.Status.online, activity=activity)
-    print("Programers Price Bot is ready")
 
 @client.event
 async def on_member_join(member):
@@ -41,6 +26,9 @@ async def on_message(message):
      embed.set_author(name= "Programers Princess", icon_url= ppLogo)
      embed.add_field(name= ">ja", value= "Displays just ask emoji", inline= False)
      embed.add_field(name= ">g", value= "Displays Google It emoji", inline = False)
+     embed.add_field(name= ">invite", value= "Displays a server invite", inline = False)
+     embed.add_field(name= ">report [message]", value= "A command to report bugs with the bot", inline = False)
+     embed.add_field(name= ">nick [nickname]", value= "Changes your nickname", inline = False)
      embed.add_field(name= ">help", value= "A helpful command", inline= False)
      embed.set_footer(text= "Tip or something here?")
           
@@ -116,6 +104,7 @@ async def on_message(message):
       # print("Mention: " + x.group(1))
       reason = ("Reason: " + x.group(2))
       
+      if message.author.
       try:
         await target.kick(reason= reason)
 
