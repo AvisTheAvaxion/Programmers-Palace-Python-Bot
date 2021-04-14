@@ -21,8 +21,9 @@ intents = discord.Intents.default()
 intents.members = True
 
 # Constants
-version = "A0.0.2"
-prefix = os.environ.get("prefix")
+version = "A0.0.5"
+#prefix = os.environ.get("prefix")
+prefix = ">"
 
 links = {
   'logo': 'https://cdn.discordapp.com/avatars/823751670210363393/472d53a711b5fe4393b6bc5dc9f6e47a.webp?size=2048',
@@ -35,6 +36,24 @@ user = {
   'Doomer': '756757056941326397',
   'Avis': '364905148083994626'
 }
+
+
+staff = {
+  299210434467069963: "Canter",
+  66609022161133568: "Duke",
+  136214966804938752: "Jordan",
+  269707833916915723: "Lutz",
+  184641676457803777: "Sammie",
+  297167297708032010: "Troll",
+  364905148083994626: "Avis",
+  756757056941326397: "Doomer",
+  328871569881563137: "GL4SS",
+  164952144368107520: "TECA",
+  327489637176311810: "Random",
+  539910274698969088: "Wesam"
+}
+
+
 
 # Client Class
 class PPClient(discord.Client):
@@ -51,14 +70,14 @@ class PPClient(discord.Client):
     log.clear()
     log.log("Programmers Princess Bot is ready!", LogLevel.INFO)
 
-  async def on_member_join(member):
+  async def on_member_join(self, member):
     channel = await client.fetch_channel(823960806260604928)
     embed = discord.Embed(title= f"{member.name} Joined!", description= f"{member.name}.exe has been sucessfully downloaded!", colour= discord.colour.Color.blue())
     embed.set_author(name= "Programers Princess", icon_url= links['logo'])
     embed.set_thumbnail(url= member.avatar_url)
     await channel.send(embed= embed)
   
-  async def on_member_remove(member):
+  async def on_member_remove(self, member):
     channel = await client.fetch_channel(823960806260604928)
     embed = discord.Embed(title= f"{member.name} Left!", description= f"{member.name}.exe deleted themselves.", colour= discord.colour.Color.blue())
     embed.set_author(name= "Programers Princess", icon_url= links['logo'])
@@ -66,7 +85,9 @@ class PPClient(discord.Client):
     await channel.send(embed= embed)
   
   async def on_message(self, message):
-    if(message.content.startswith(prefix)):
+    if message.content.lower() == "typescript":
+      await message.channel.send("is trash")
+    elif(message.content.startswith(prefix)):
       message.content = message.content[len(prefix):]
       keyword = message.content.split(' ')[0]
       for cmd in self.commands:
@@ -192,26 +213,91 @@ async def kick(mesg):
   
   x = re.search("<@!\d+> ?(.*)", msg)
   if x != None:
-    text = f'Pretend {target.name} got kicked'
+    text = f'{target.name}.exe was sent to the recyling bin with the php files'
     if x.group(1) == "":
       text += "!"
+      reason = "None"
     else:
       text += (" for: " + x.group(1))
+      reason = x.group(1)
     
-    await mesg.channel.send(text)
+    if target.id in staff:
+      embed = discord.Embed(title= "Error", description= "You can't kick staff members", colour= discord.colour.Color.red())
+      await mesg.channel.send(embed= embed)
+
+      if target.id == 299210434467069963:
+        await mesg.channel.send("https://static.wikia.nocookie.net/24005259-b85f-4770-a051-abadd75daace")
+        
+    else:
+      try:
+        await target.kick(reason= reason)
+        await mesg.channel.send(text)
+
+      except discord.Forbidden:
+        embed = discord.Embed(title= "Error", description= "I don't have permission to kick this person", colour= discord.colour.Color.red())
+        await mesg.channel.send(embed= embed)
 kick_cmd = Command('kick', kick, 'kicks a user!')
+
+
+# Ban Command
+async def ban(mesg):
+  msg = mesg.content
+  try:
+    target = mesg.mentions[0]
+  except IndexError:
+    embed = discord.Embed(title= "Error", description= "No member mentioned to ban", colour= discord.colour.Color.red())
+    await mesg.channel.send(embed = embed)
+    return ""
+  
+  x = re.search("<@!\d+> ?(.*)", msg)
+  if x != None:
+    text = f'{target.name} code was scrambled beyond recognition'
+    if x.group(1) == "":
+      text += "!"
+      reason = "None"
+    else:
+      text += (" for: " + x.group(1))
+      reason = x.group(1)
+    
+    if target.id in staff:
+      embed = discord.Embed(title= "Error", description= "You can't ban staff members", colour= discord.colour.Color.red())
+      await mesg.channel.send(embed= embed)
+
+      if target.id == 299210434467069963:
+        await mesg.channel.send("https://static.wikia.nocookie.net/24005259-b85f-4770-a051-abadd75daace")
+        
+    else:
+      try:
+        await target.ban(reason= reason)
+        await mesg.channel.send(text)
+
+      except discord.Forbidden:
+        embed = discord.Embed(title= "Error", description= "I don't have permission to ban this person", colour= discord.colour.Color.red())
+        await mesg.channel.send(embed= embed)
+ban_cmd = Command('ban', ban, 'bans a user!')
+
+
+
+
+
+
+
 
 # Shutdown Command
 async def shutdown(mesg):
   issuer = str(mesg.author.id)
   if(issuer == user['Doomer'] or issuer == user['Avis']):
     log.warn('Bot is shutting down!')
+    await mesg.add_reaction("✅")
     await client.close()
+    log.warn("Bot shutdown complete")
+
   else:
     embed = discord.Embed(title="Error", description= "You don't have the permission to perform this action!", colour= discord.colour.Color.red())
     embed.set_author(name= "Programers Princess", icon_url= links['logo'])
     await mesg.channel.send(embed = embed)
 shutdown_cmd = Command('shutdown', shutdown, None)
 
+
 # Bot Login
-client.run(os.environ.get("token"))
+client.run("Token")
