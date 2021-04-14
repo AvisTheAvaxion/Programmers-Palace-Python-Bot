@@ -1,0 +1,9 @@
+# pyenv
+bot-env/
+__pycache__/
+
+# editor config
+.vscode/
+
+# secret
+.env
